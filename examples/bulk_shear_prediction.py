@@ -9,7 +9,7 @@ from tqdm import tqdm
 import matplotlib.pyplot as plt
 import numpy as np
 
-from mslearn.data.load import load_tehrani_superhard_mat
+from matminer.datasets.convenience_loaders import load_tehrani_superhard_mat
 from mslearn.featurization import AutoFeaturizer
 from mslearn.preprocessing import DataCleaner, FeatureReducer
 from mslearn.automl.adaptors import TPOTAdaptor
