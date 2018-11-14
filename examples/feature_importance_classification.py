@@ -1,25 +1,25 @@
 import numpy as np
 from mslearn.analytics import Analytics
-from mslearn.data.load import load_expt_gap
+from matminer.datasets.convenience_loaders import load_glass_ternary_landolt
 from mslearn.featurize import Featurize
 from mslearn.preprocess import PreProcess
 from matminer import PlotlyFig
 from scipy.stats import linregress
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 
 # inputs
-target = 'gap expt'
+target = 'gfa'
 RS = 24
-mode = 'regression'
+mode = 'classification'
 MULTIINDEX = True
 if MULTIINDEX:
     target = ('Input Data', target)
 
-df_init = load_expt_gap()
-featzer = Featurize(exclude=['CohesiveEnergy', 'AtomicPackingEfficiency'],
+df_init = load_glass_ternary_landolt().drop('phase', axis=1)
+featzer = Featurize(preset_name='deml',
+                    exclude=['CohesiveEnergy', 'AtomicPackingEfficiency'],
                     multiindex=MULTIINDEX)
-
 df = featzer.featurize_formula(df_init,
                                featurizers='all',
                                guess_oxidstates=False)
@@ -27,17 +27,10 @@ df = featzer.featurize_formula(df_init,
 prep = PreProcess(target=target)
 df = prep.preprocess(df)
 
-print(df.head())
-df.to_csv('test.csv')
-
 X_train, X_test, y_train, y_test = train_test_split(
     df.drop(target, axis=1), df[target])
 
-model = RandomForestRegressor(n_estimators=100,
-                              bootstrap=False,
-                              max_features=0.8,
-                              min_samples_leaf=1,
-                              min_samples_split=4,
+model = RandomForestClassifier(n_estimators=100,
                               random_state=RS)
 
 
@@ -61,9 +54,9 @@ print('correlation, r={}'.format(lr.rvalue))
 print('p-value, p={}'.format(lr.pvalue))
 
 pf = PlotlyFig(
-    title='Comparison of feature importances in predicting expt. gap',
+    title='Comparison of feature importances in predicting glass formation',
     x_title='Analytics.feature_importance (Variance Sensitivity Analysis)',
-    y_title='RandomForestRegressor.feature_importances_')
+    y_title='RandomForestClassifier.feature_importances_')
 pf.xy([(x, y), (xreg, yreg)],
       labels=analysis.features,
       modes=['markers', 'line'],

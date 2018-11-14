@@ -1,4 +1,4 @@
-import mslearn.data.load as loader
+from matminer.datasets.convenience_loaders import load_castelli_perovskites
 import numpy as np
 from time import time
 from mslearn.analytics import Analytics
@@ -8,7 +8,6 @@ from mslearn.preprocess import PreProcess
 from sklearn.model_selection import train_test_split
 
 # inputs
-loader_func = loader.load_castelli_perovskites
 LIMIT = 2000
 IGNORE_THESE_COLUMNS = ['cbm', 'vbm']
 TARGET = 'gap gllbsc'
@@ -33,7 +32,7 @@ if MULTIINDEX:
 
 
 # actual pipeline:
-df_init = loader_func()
+df_init = load_castelli_perovskites()
 if LIMIT and LIMIT<len(df_init):
     df_init = df_init.iloc[np.random.choice(len(df_init), LIMIT, replace=False)]
 
