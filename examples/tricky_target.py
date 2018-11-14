@@ -1,14 +1,13 @@
-import mslearn.data.load as loader
+from matminer.datasets.convenience_loaders import load_castelli_perovskites
 import numpy as np
 from time import time
-from mslearn.analysis import Analysis
+from mslearn.analytics import Analytics
 from mslearn.automl.tpot_utils import TPOTAutoML
 from mslearn.featurize import Featurize
 from mslearn.preprocess import PreProcess
 from sklearn.model_selection import train_test_split
 
 # inputs
-loader_func = loader.load_castelli_perovskites
 LIMIT = 2000
 IGNORE_THESE_COLUMNS = ['cbm', 'vbm']
 TARGET = 'gap gllbsc'
@@ -33,7 +32,7 @@ if MULTIINDEX:
 
 
 # actual pipeline:
-df_init = loader_func()
+df_init = load_castelli_perovskites()
 if LIMIT and LIMIT<len(df_init):
     df_init = df_init.iloc[np.random.choice(len(df_init), LIMIT, replace=False)]
 
@@ -77,11 +76,11 @@ print('the best test score:')
 print(test_score)
 
 
-analysis = Analysis(tpot, X_train, y_train, X_test, y_test, MODE,
-                   target=TARGET,
-                   features=df.drop(TARGET, axis=1).columns,
-                   test_samples_index=X_test.index,
-                   random_state=RS)
+analysis = Analytics(tpot, X_train, y_train, X_test, y_test, MODE,
+                     target=TARGET,
+                     features=df.drop(TARGET, axis=1).columns,
+                     test_samples_index=X_test.index,
+                     random_state=RS)
 
 feature_importance = analysis.get_feature_importance(sort=True)
 print('feature importance')
