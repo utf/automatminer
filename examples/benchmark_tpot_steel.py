@@ -1,5 +1,5 @@
 from mslearn.automl.tpot_utils import TPOTAutoML
-from mslearn.data.load import load_steel_strength
+from matminer.datasets.convenience_loaders import load_steel_strength
 from mslearn.featurize import Featurize
 from mslearn.preprocess import PreProcess
 from sklearn.model_selection import train_test_split

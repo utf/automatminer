@@ -1,21 +1,21 @@
 from mslearn.automl.tpot_utils import TPOTAutoML
-from mslearn.data.load import load_glass_formation
+from matminer.datasets.convenience_loaders import load_castelli_perovskites
 from mslearn.featurize import Featurize
 from mslearn.preprocess import PreProcess
 from sklearn.model_selection import train_test_split
 from time import time
 
 # user inputs
-target = 'gfa'
+target = 'gap gllbsc'
 RS = 29
-timelimitmins = None
+timelimitmins = 120
 print('timelimitmins = ', timelimitmins)
-model_type = 'classification'
-scoring = 'f1'
+model_type = 'regression'
+scoring = 'r2'
 
 # load and featurize:
-df_init = load_glass_formation(phase='ternary')
-featzer = Featurize(ignore_cols=['phase'], ignore_errors=True)
+df_init = load_castelli_perovskites()[['formula', target]]
+featzer = Featurize()
 
 df_feats = featzer.featurize_formula(df_init, featurizers='all')
 

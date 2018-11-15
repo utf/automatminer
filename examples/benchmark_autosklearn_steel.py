@@ -5,12 +5,12 @@ from cProfile import Profile
 
 import pandas as pd
 from mslearn.automl.autosklearn_utils import AutoSklearnML
-from mslearn.data.load import load_castelli_perovskites
+from matminer.datasets.convenience_loaders import load_steel_strength
 from mslearn.featurize import Featurize
 from mslearn.preprocess import PreProcess
 
-data_name = "castelli"
-target = "gap gllbsc"
+data_name = "steel"
+target = "yield strength"
 timelimit_secs = 7200
 rs = 29
 
@@ -25,7 +25,7 @@ feature_output_file = \
 if os.path.exists(feature_output_file):
     df = pd.read_csv(feature_output_file, index_col=0)
 else:
-    df_init = load_castelli_perovskites()[["formula", target]]
+    df_init = load_steel_strength()[['formula', target]]
 
     prof = Profile()
     prof.enable()
@@ -87,3 +87,4 @@ prof.dump_stats(
 print(auto_regressor.get_models_with_weights())
 print(auto_regressor.sprint_statistics())
 print('total fitting time: {} s'.format(time() - start_time))
+
